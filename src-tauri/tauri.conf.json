@@ -18,16 +18,11 @@
         "decorations": true,
         "transparent": false
       }
-    ],
-    "macOS": {
-      "titleBarStyle": "Overlay",
-      "class": "plain",
-      "icon": "icons/icon.png"
-    }
+    ]
   },
   "bundle": {
     "active": true,
-    "targets": "dmg",
+    "targets": "msi",
     "icon": [
       "icons/icon.svg"
     ]
