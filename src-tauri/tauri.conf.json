@@ -1,0 +1,24 @@
+{
+  "productName": "长期目标",
+  "version": "1.0.0",
+  "description": "记录长期目标的管理应用",
+  "icon": "icons/icon.png",
+  "windows": [
+    {
+      "title": "长期目标",
+      "width": 400,
+      "height": 600,
+      "resizable": false,
+      "decorations": true,
+      "transparent": false
+    }
+macOS": {
+  ],
+  "    "titleBarStyle": "Overlay",
+    "class": "plain",
+    "icon": "icons/icon.png"
+  },
+  "security": {
+    "csp": null
+  }
+}
