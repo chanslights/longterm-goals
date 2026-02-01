@@ -5,7 +5,8 @@
   "identifier": "com.longterm-goals.app",
   "build": {
     "beforeDevCommand": "npm run dev",
-    "devUrl": "http://localhost:5173"
+    "devUrl": "http://localhost:5173",
+    "distDir": "../dist"
   },
   "app": {
     "withGlobalTauri": true,

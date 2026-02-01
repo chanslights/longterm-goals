@@ -22,30 +22,28 @@ jobs:
       - name: Install dependencies
         run: npm install
         
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
-          
-      - name: Check file structure
-        run: |
-          dir
-          dir src-tauri
-          
       - name: Build frontend
         run: npm run build
-          
+        
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Install Tauri CLI
+        run: cargo install tauri-cli
+        
       - name: Build Windows exe
-        run: cargo build --release --manifest-path src-tauri/Cargo.toml
-          
+        run: cargo tauri build --release
+        
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: src-tauri/target/release/longterm-goals.exe
+          path: src-tauri/target/release/bundle/msi/longterm-goals_1.0.0_x64_en-US.msi
           
       - name: Create Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: src-tauri/target/release/longterm-goals.exe
+          files: src-tauri/target/release/bundle/msi/longterm-goals_1.0.0_x64_en-US.msi
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
