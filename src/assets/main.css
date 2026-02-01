@@ -17,7 +17,7 @@ html, body {
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: transparent;
+  background: transparent !important;
 }
 
 /* 窗口拖拽 */
@@ -28,19 +28,4 @@ body {
 /* 按钮不可拖拽 */
 .add-btn, .tab-btn, .goal-item, .modal-btn {
   -webkit-app-region: no-drag;
-}
-
-/* 窗口阴影 - 只有底部 */
-.app-container::before {
-  content: '';
-  position: fixed;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  height: 30px;
-  background: inherit;
-  filter: blur(20px);
-  opacity: 0.3;
-  pointer-events: none;
 }
