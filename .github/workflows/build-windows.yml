@@ -31,6 +31,9 @@ jobs:
           dir
           dir src-tauri
           
+      - name: Build frontend
+        run: npm run build
+          
       - name: Build Windows exe
         run: cargo build --release --manifest-path src-tauri/Cargo.toml
           
