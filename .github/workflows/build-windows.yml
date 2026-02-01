@@ -32,7 +32,7 @@ jobs:
         run: npm install @tauri-apps/cli@2 @tauri-apps/cli@2
       
       - name: Build Windows Installer
-        run: npm run tauri build -- --target x86_64-pc-windows-msvc
+        run: npm run tauri build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
@@ -40,12 +40,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: windows-installer
-          path: src-tauri/target/release/bundle/msi/
+          path: src-tauri/target/release/
           
       - name: Create Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: src-tauri/target/release/bundle/msi/*.msi
+          files: src-tauri/target/release/*.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
