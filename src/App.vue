@@ -1,139 +1,106 @@
 <template>
-  <div class="min-h-screen bg-ios-gray">
-    <!-- 顶部标题 -->
-    <div class="bg-white px-4 py-3 shadow-sm">
-      <h1 class="text-xl font-semibold text-center text-gray-900">长期目标</h1>
+  <div class="app-container">
+    <!-- 目标列表 -->
+    <div class="goals-container">
+      <div class="goals-wrapper">
+        <!-- 进行中列表 -->
+        <div v-if="currentTab === 'active'" class="goals-list">
+          <TransitionGroup name="goal">
+            <div 
+              v-for="goal in goals" 
+              :key="goal.id"
+              class="goal-item"
+              @click="completeGoal(goal.id)"
+            >
+              <div class="goal-circle">
+                <span v-if="goal.completed" class="check-icon">✓</span>
+              </div>
+              <span class="goal-text">{{ goal.title }}</span>
+            </div>
+          </TransitionGroup>
+          
+          <div v-if="goals.length === 0" class="empty-state">
+            <span class="empty-icon">◎</span>
+            <p>点击 + 添加目标</p>
+          </div>
+        </div>
+
+        <!-- 已完成列表 -->
+        <div v-else class="goals-list">
+          <TransitionGroup name="goal">
+            <div 
+              v-for="goal in completedGoals" 
+              :key="goal.id"
+              class="goal-item completed"
+              @click="restoreGoal(goal.id)"
+            >
+              <div class="goal-circle completed">
+                <span class="check-icon">✓</span>
+              </div>
+              <span class="goal-text">{{ goal.title }}</span>
+            </div>
+          </TransitionGroup>
+
+          <div v-if="completedGoals.length === 0" class="empty-state">
+            <span class="empty-icon">✓</span>
+            <p>暂无已完成的目标</p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Tab 切换 -->
-    <div class="bg-white mt-2 px-4 py-2 flex justify-around border-b border-gray-100">
+    <div class="tab-bar">
       <button 
         @click="currentTab = 'active'"
-        :class="['px-4 py-2 text-sm font-medium transition-colors', 
-                 currentTab === 'active' ? 'text-ios-blue' : 'text-gray-400']"
+        :class="['tab-btn', { active: currentTab === 'active' }]"
       >
         进行中
       </button>
+      <span class="tab-divider">|</span>
       <button 
         @click="currentTab = 'completed'"
-        :class="['px-4 py-2 text-sm font-medium transition-colors', 
-                 currentTab === 'completed' ? 'text-ios-blue' : 'text-gray-400']"
+        :class="['tab-btn', { active: currentTab === 'completed' }]"
       >
         已完成
       </button>
     </div>
 
-    <!-- 目标列表 -->
-    <div class="px-4 py-2">
-      <!-- 进行中列表 -->
-      <div v-if="currentTab === 'active'">
-        <div 
-          v-for="goal in goals" 
-          :key="goal.id"
-          class="bg-white rounded-xl mb-2 p-4 shadow-sm flex items-center justify-between"
-        >
-          <div class="flex items-center flex-1">
-            <button 
-              @click="completeGoal(goal.id)"
-              class="w-6 h-6 rounded-full border-2 border-gray-300 mr-3 flex items-center justify-center hover:border-ios-green transition-colors"
-            >
-              <span v-if="goal.completed" class="text-ios-green">✓</span>
-            </button>
-            <div>
-              <p class="text-gray-900 text-base">{{ goal.title }}</p>
-              <p class="text-gray-400 text-xs mt-1">{{ formatDate(goal.createdAt) }}</p>
-            </div>
-          </div>
-          <button 
-            @click="deleteGoal(goal.id)"
-            class="text-ios-red text-sm px-3 py-1"
-          >
-            删除
-          </button>
-        </div>
-        
-        <div v-if="goals.length === 0" class="text-center py-12">
-          <p class="text-gray-400 text-sm">暂无目标，点击下方添加</p>
-        </div>
-      </div>
-
-      <!-- 已完成列表 -->
-      <div v-else>
-        <div 
-          v-for="goal in completedGoals" 
-          :key="goal.id"
-          class="bg-white rounded-xl mb-2 p-4 shadow-sm flex items-center justify-between"
-        >
-          <div class="flex items-center flex-1">
-            <div class="w-6 h-6 rounded-full bg-ios-green mr-3 flex items-center justify-center">
-              <span class="text-white text-xs">✓</span>
-            </div>
-            <div>
-              <p class="text-gray-900 text-base line-through text-gray-400">{{ goal.title }}</p>
-              <p class="text-gray-400 text-xs mt-1">
-                完成于 {{ formatDate(goal.completedAt) }}
-              </p>
-            </div>
-          </div>
-          <button 
-            @click="restoreGoal(goal.id)"
-            class="text-ios-blue text-sm px-3 py-1"
-          >
-            恢复
-          </button>
-        </div>
-
-        <div v-if="completedGoals.length === 0" class="text-center py-12">
-          <p class="text-gray-400 text-sm">暂无已完成的目标</p>
-        </div>
-      </div>
-    </div>
-
     <!-- 添加按钮 -->
-    <div class="fixed bottom-8 left-0 right-0 px-4">
-      <button 
-        @click="showAddModal = true"
-        class="w-full bg-ios-blue text-white py-4 rounded-2xl font-medium text-lg shadow-lg hover:bg-blue-600 transition-colors"
-      >
-        + 添加新目标
-      </button>
-    </div>
+    <button 
+      @click="showAddModal = true"
+      class="add-btn"
+    >
+      +
+    </button>
 
     <!-- 添加目标弹窗 -->
-    <Teleport to="body">
+    <Transition name="modal">
       <div 
         v-if="showAddModal" 
-        class="fixed inset-0 bg-black/50 flex items-end justify-center"
+        class="modal-overlay"
         @click.self="showAddModal = false"
       >
-        <div class="bg-white rounded-t-3xl w-full p-6 animate-slide-up">
-          <h2 class="text-lg font-semibold mb-4">添加新目标</h2>
+        <div class="modal-content">
           <input 
             v-model="newGoalTitle"
             @keyup.enter="addGoal"
             type="text" 
-            placeholder="输入你的长期目标..."
-            class="w-full px-4 py-3 border border-gray-200 rounded-xl text-base focus:outline-none focus:border-ios-blue mb-4"
+            placeholder="输入目标..."
+            class="modal-input"
             autofocus
           />
-          <div class="flex gap-3">
-            <button 
-              @click="showAddModal = false; newGoalTitle = ''"
-              class="flex-1 py-3 rounded-xl bg-gray-100 text-gray-600 font-medium"
-            >
+          <div class="modal-actions">
+            <button @click="showAddModal = false; newGoalTitle = ''" class="modal-btn cancel">
               取消
             </button>
-            <button 
-              @click="addGoal"
-              :disabled="!newGoalTitle.trim()"
-              class="flex-1 py-3 rounded-xl bg-ios-blue text-white font-medium disabled:opacity-50"
-            >
+            <button @click="addGoal" :disabled="!newGoalTitle.trim()" class="modal-btn confirm">
               添加
             </button>
           </div>
         </div>
       </div>
-    </Teleport>
+    </Transition>
   </div>
 </template>
 
@@ -172,30 +139,283 @@ const deleteGoal = (id) => {
 const restoreGoal = (id) => {
   store.restoreGoal(id)
 }
-
-const formatDate = (date) => {
-  if (!date) return ''
-  return new Date(date).toLocaleDateString('zh-CN', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  })
-}
 </script>
 
 <style>
-@keyframes slide-up {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.animate-slide-up {
-  animation: slide-up 0.3s ease-out;
+.app-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 目标列表 */
+.goals-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.goals-wrapper {
+  width: 100%;
+  max-width: 280px;
+}
+
+.goals-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.goal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.goal-item:hover {
+  background: rgba(255, 255, 255, 0.95);
+  transform: scale(1.02);
+}
+
+.goal-item:active {
+  transform: scale(0.98);
+}
+
+.goal-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.goal-circle.completed {
+  background: #000;
+  border-color: #000;
+}
+
+.check-icon {
+  color: white;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.goal-text {
+  font-size: 14px;
+  color: #1d1d1f;
+  font-weight: 400;
+  letter-spacing: 0.3px;
+  line-height: 1.4;
+}
+
+.goal-item.completed .goal-text {
+  color: #86868b;
+  text-decoration: line-through;
+}
+
+/* 空状态 */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  color: #86868b;
+}
+
+.empty-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+/* Tab 栏 */
+.tab-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 12px 0;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #86868b;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.tab-btn.active {
+  color: #1d1d1f;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.tab-divider {
+  color: #d2d2d7;
+  font-size: 10px;
+}
+
+/* 添加按钮 */
+.add-btn {
+  position: fixed;
+  left: 12px;
+  bottom: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.8);
+  border: none;
+  color: white;
+  font-size: 22px;
+  font-weight: 300;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-app-region: no-drag;
+}
+
+.add-btn:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.add-btn:active {
+  transform: scale(0.95);
+}
+
+/* 弹窗 */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+}
+
+.modal-content {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px;
+  padding: 24px;
+  width: 90%;
+  max-width: 280px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+}
+
+.modal-input {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.05);
+  font-size: 16px;
+  outline: none;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.modal-input::placeholder {
+  color: #86868b;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.modal-btn {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-btn.cancel {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1d1d1f;
+}
+
+.modal-btn.confirm {
+  background: #007aff;
+  color: white;
+}
+
+.modal-btn.confirm:disabled {
+  opacity: 0.4;
+}
+
+/* 动画 */
+.goal-enter-active,
+.goal-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.goal-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.goal-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.modal-enter-active {
+  transition: all 0.3s ease;
+}
+
+.modal-leave-active {
+  transition: all 0.2s ease;
+}
+
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+.modal-enter-from .modal-content,
+.modal-leave-to .modal-content {
+  transform: scale(0.9);
 }
 </style>
