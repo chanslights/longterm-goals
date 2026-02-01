@@ -26,8 +26,13 @@ jobs:
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
           
+      - name: Check file structure
+        run: |
+          dir
+          dir src-tauri
+          
       - name: Build Windows exe
-        run: cd src-tauri && cargo build --release
+        run: cargo build --release --manifest-path src-tauri/Cargo.toml
           
       - name: Upload exe
         uses: actions/upload-artifact@v4
