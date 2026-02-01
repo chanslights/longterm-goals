@@ -157,6 +157,7 @@ const restoreGoal = (id) => {
   padding: 20px 16px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
+  background: transparent !important;
 }
 
 /* 目标列表 */
