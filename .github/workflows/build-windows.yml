@@ -27,18 +27,18 @@ jobs:
         uses: dtolnay/rust-toolchain@stable
           
       - name: Build Windows exe
-        run: cargo build --release
+        run: cd src-tauri && cargo build --release
           
       - name: Upload exe
         uses: actions/upload-artifact@v4
         with:
           name: windows-exe
-          path: target/release/longterm-goals.exe
+          path: src-tauri/target/release/longterm-goals.exe
           
       - name: Create Release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
-          files: target/release/longterm-goals.exe
+          files: src-tauri/target/release/longterm-goals.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
