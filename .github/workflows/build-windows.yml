@@ -32,7 +32,7 @@ jobs:
         run: cargo install tauri-cli
         
       - name: Build Windows exe
-        run: npx tauri build --release
+        run: npx tauri build -- --release
         
       - name: Upload exe
         uses: actions/upload-artifact@v4
