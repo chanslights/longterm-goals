@@ -24,7 +24,7 @@
         </TransitionGroup>
         
         <div v-if="goals.length === 0" class="empty-state">
-          <p class="empty-text">点击下方 + 添加目标</p>
+          <p class="empty-text">Tap + to add goal</p>
         </div>
       </div>
 
@@ -45,37 +45,44 @@
         </TransitionGroup>
 
         <div v-if="completedGoals.length === 0" class="empty-state">
-          <p class="empty-text">暂无已完成的目标</p>
+          <p class="empty-text">No completed goals</p>
         </div>
       </div>
     </div>
 
-    <!-- Tab切换 -->
-    <div class="tab-bar">
+    <!-- 底部控制栏 -->
+    <div class="bottom-bar">
+      <!-- Tab切换 -->
+      <div class="tab-group">
+        <button 
+          @click="currentTab = 'active'"
+          :class="['tab-btn', { active: currentTab === 'active' }]"
+        >
+          <span class="tab-indicator-dot"></span>
+          <span class="tab-name">Active</span>
+          <span v-if="goals.length > 0" class="tab-count">{{ goals.length }}</span>
+        </button>
+        <button 
+          @click="currentTab = 'completed'"
+          :class="['tab-btn', { active: currentTab === 'completed' }]"
+        >
+          <span class="tab-indicator-dot"></span>
+          <span class="tab-name">Done</span>
+          <span v-if="completedGoals.length > 0" class="tab-count">{{ completedGoals.length }}</span>
+        </button>
+      </div>
+
+      <!-- 添加按钮 -->
       <button 
-        @click="currentTab = 'active'"
-        :class="['tab-btn', { active: currentTab === 'active' }]"
+        @click="showAddModal = true"
+        class="add-btn"
       >
-        <span class="tab-name">进行中</span>
-        <span v-if="goals.length > 0" class="tab-count">{{ goals.length }}</span>
-      </button>
-      <div class="tab-divider"></div>
-      <button 
-        @click="currentTab = 'completed'"
-        :class="['tab-btn', { active: currentTab === 'completed' }]"
-      >
-        <span class="tab-name">已完成</span>
-        <span v-if="completedGoals.length > 0" class="tab-count">{{ completedGoals.length }}</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
       </button>
     </div>
-
-    <!-- 添加按钮 -->
-    <button 
-      @click="showAddModal = true"
-      class="add-btn"
-    >
-      <span class="plus-icon">+</span>
-    </button>
 
     <!-- 添加目标弹窗 -->
     <Transition name="modal">
@@ -85,21 +92,21 @@
         @click.self="showAddModal = false"
       >
         <div class="modal-content">
-          <h3 class="modal-title">添加新目标</h3>
+          <h3 class="modal-title">New Goal</h3>
           <input 
             v-model="newGoalTitle"
             @keyup.enter="addGoal"
             type="text" 
-            placeholder="输入目标内容..."
+            placeholder="Enter your goal..."
             class="modal-input"
             autofocus
           />
           <div class="modal-actions">
             <button @click="showAddModal = false; newGoalTitle = ''" class="modal-btn cancel">
-              取消
+              Cancel
             </button>
             <button @click="addGoal" :disabled="!newGoalTitle.trim()" class="modal-btn confirm">
-              添加
+              Add
             </button>
           </div>
         </div>
@@ -153,19 +160,19 @@ const restoreGoal = (id) => {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 20px 16px 16px;
+  padding: 16px 14px 12px;
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 /* 标题 */
 .header {
-  padding-bottom: 12px;
+  padding-bottom: 10px;
   text-align: center;
 }
 
 .title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: #ffffff;
   letter-spacing: 0.5px;
@@ -179,24 +186,41 @@ const restoreGoal = (id) => {
   overflow: hidden;
 }
 
-.goals-wrapper {
+.goals-list {
   width: 100%;
   max-width: 280px;
-}
-
-.goals-list {
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+  padding-right: 4px;
+}
+
+/* 自定义滚动条 */
+.goals-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.goals-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.goals-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.goals-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* 目标项 */
 .goal-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   border: 1.5px solid rgba(255, 255, 255, 0.25);
@@ -223,8 +247,8 @@ const restoreGoal = (id) => {
 
 /* 圆形选择器 */
 .goal-circle {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   border: 2px solid #ffffff;
   display: flex;
@@ -234,13 +258,9 @@ const restoreGoal = (id) => {
   transition: all 0.2s ease;
 }
 
-.goal-circle.active {
-  border: 2px solid #ffffff;
-}
-
 .goal-circle.active .circle-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   background: #ffffff;
   border-radius: 50%;
 }
@@ -252,13 +272,13 @@ const restoreGoal = (id) => {
 
 .check-icon {
   color: #ffffff;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 600;
 }
 
 /* 目标文字 */
 .goal-text {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #ffffff;
   line-height: 1.4;
@@ -274,58 +294,77 @@ const restoreGoal = (id) => {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 20px;
+  padding: 50px 20px;
 }
 
 .empty-text {
-  font-size: 13px;
+  font-size: 12px;
   color: rgba(255, 255, 255, 0.5);
 }
 
-/* Tab栏 */
-.tab-bar {
+/* 底部控制栏 */
+.bottom-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 0;
-  padding: 10px 6px;
-  margin-top: 8px;
-  border-radius: 14px;
-  background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 10px;
+}
+
+/* Tab组 */
+.tab-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .tab-btn {
-  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px 16px;
+  gap: 5px;
+  padding: 7px 12px;
   background: none;
   border: none;
   cursor: pointer;
-  transition: all 0.25s ease;
-  border-radius: 10px;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.tab-indicator-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  transition: all 0.2s ease;
 }
 
 .tab-name {
-  font-size: 13px;
+  font-size: 11px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
+  transition: all 0.2s ease;
 }
 
 .tab-count {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 8px;
+  padding: 1px 5px;
+  border-radius: 6px;
   background: rgba(255, 255, 255, 0.15);
   color: #ffffff;
 }
 
 .tab-btn.active {
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tab-btn.active .tab-indicator-dot {
+  background: #34c759;
+  box-shadow: 0 0 6px rgba(52, 199, 89, 0.5);
 }
 
 .tab-btn.active .tab-name {
@@ -333,22 +372,13 @@ const restoreGoal = (id) => {
   font-weight: 600;
 }
 
-.tab-divider {
-  width: 1px;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.2);
-}
-
 /* 添加按钮 */
 .add-btn {
-  position: fixed;
-  left: 12px;
-  bottom: 12px;
-  width: 38px;
-  height: 38px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   color: #ffffff;
   cursor: pointer;
   display: flex;
@@ -358,18 +388,12 @@ const restoreGoal = (id) => {
 }
 
 .add-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
   transform: scale(1.05);
 }
 
 .add-btn:active {
   transform: scale(0.95);
-}
-
-.plus-icon {
-  font-size: 24px;
-  font-weight: 300;
-  line-height: 1;
 }
 
 /* 弹窗 */
@@ -385,28 +409,28 @@ const restoreGoal = (id) => {
 .modal-content {
   background: rgba(30, 30, 30, 0.95);
   border-radius: 16px;
-  padding: 20px;
-  width: 80%;
-  max-width: 260px;
+  padding: 18px;
+  width: 78%;
+  max-width: 240px;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .modal-title {
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   color: #ffffff;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .modal-input {
   width: 100%;
-  padding: 12px 14px;
+  padding: 11px 13px;
   border: none;
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.1);
-  font-size: 14px;
+  font-size: 13px;
   outline: none;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   color: #ffffff;
   border: 1px solid transparent;
 }
@@ -422,15 +446,15 @@ const restoreGoal = (id) => {
 
 .modal-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
 }
 
 .modal-btn {
   flex: 1;
-  padding: 10px;
+  padding: 9px;
   border: none;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -458,12 +482,12 @@ const restoreGoal = (id) => {
 
 .goal-enter-from {
   opacity: 0;
-  transform: translateY(15px);
+  transform: translateY(10px);
 }
 
 .goal-leave-to {
   opacity: 0;
-  transform: translateX(-20px);
+  transform: translateX(-15px);
 }
 
 .modal-enter-active {
