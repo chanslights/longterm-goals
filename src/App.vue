@@ -182,17 +182,16 @@ const restoreGoal = (id) => {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .goal-item:hover {
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(0, 0, 0, 0.8);
   transform: scale(1.02);
 }
 
@@ -224,15 +223,15 @@ const restoreGoal = (id) => {
 }
 
 .goal-text {
-  font-size: 14px;
-  color: #1d1d1f;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.95);
   font-weight: 400;
   letter-spacing: 0.3px;
   line-height: 1.4;
 }
 
 .goal-item.completed .goal-text {
-  color: #86868b;
+  color: rgba(255, 255, 255, 0.4);
   text-decoration: line-through;
 }
 
@@ -243,17 +242,17 @@ const restoreGoal = (id) => {
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
-  color: #86868b;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 .empty-icon {
-  font-size: 32px;
+  font-size: 28px;
   margin-bottom: 12px;
   opacity: 0.5;
 }
 
 .empty-state p {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 400;
 }
 
@@ -263,28 +262,28 @@ const restoreGoal = (id) => {
   align-items: center;
   justify-content: center;
   gap: 16px;
-  padding: 12px 0;
+  padding: 10px 0;
 }
 
 .tab-btn {
   background: none;
   border: none;
-  font-size: 12px;
-  color: #86868b;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 20px;
+  padding: 6px 10px;
+  border-radius: 16px;
   transition: all 0.3s ease;
   font-weight: 500;
 }
 
 .tab-btn.active {
-  color: #1d1d1f;
-  background: rgba(0, 0, 0, 0.05);
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .tab-divider {
-  color: #d2d2d7;
+  color: rgba(255, 255, 255, 0.3);
   font-size: 10px;
 }
 
@@ -322,63 +321,64 @@ const restoreGoal = (id) => {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  backdrop-filter: blur(30px);
-  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
 }
 
 .modal-content {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 24px;
-  padding: 24px;
-  width: 90%;
-  max-width: 280px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+  background: rgba(30, 30, 30, 0.95);
+  border-radius: 20px;
+  padding: 20px;
+  width: 85%;
+  max-width: 260px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .modal-input {
   width: 100%;
-  padding: 16px;
+  padding: 14px;
   border: none;
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.05);
-  font-size: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.1);
+  font-size: 15px;
   outline: none;
-  margin-bottom: 16px;
+  margin-bottom: 14px;
   font-weight: 400;
+  color: white;
 }
 
 .modal-input::placeholder {
-  color: #86868b;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 .modal-actions {
   display: flex;
-  gap: 12px;
+  gap: 10px;
 }
 
 .modal-btn {
   flex: 1;
-  padding: 12px;
+  padding: 10px;
   border: none;
-  border-radius: 14px;
-  font-size: 14px;
+  border-radius: 12px;
+  font-size: 13px;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .modal-btn.cancel {
-  background: rgba(0, 0, 0, 0.05);
-  color: #1d1d1f;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .modal-btn.confirm {
-  background: #007aff;
-  color: white;
+  background: rgba(255, 255, 255, 0.9);
+  color: black;
 }
 
 .modal-btn.confirm:disabled {
