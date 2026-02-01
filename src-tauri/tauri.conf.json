@@ -1,24 +1,39 @@
 {
+  "$schema": "https://schema.tauri.app/config/2",
   "productName": "长期目标",
   "version": "1.0.0",
-  "description": "记录长期目标的管理应用",
-  "icon": "icons/icon.png",
-  "windows": [
-    {
-      "title": "长期目标",
-      "width": 400,
-      "height": 600,
-      "resizable": false,
-      "decorations": true,
-      "transparent": false
-    }
-macOS": {
-  ],
-  "    "titleBarStyle": "Overlay",
-    "class": "plain",
-    "icon": "icons/icon.png"
+  "identifier": "com.longterm-goals.app",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:5173"
   },
-  "security": {
-    "csp": null
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "长期目标",
+        "width": 400,
+        "height": 600,
+        "resizable": false,
+        "decorations": true,
+        "transparent": false
+      }
+    ],
+    "macOS": {
+      "titleBarStyle": "Overlay",
+      "class": "plain",
+      "icon": "icons/icon.png"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
   }
 }
