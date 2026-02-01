@@ -13,11 +13,12 @@
       {
         "title": "长期目标",
         "width": 300,
-        "height": 420,
+        "height": 440,
         "resizable": false,
         "decorations": false,
         "transparent": true,
-        "skipTaskbar": false
+        "skipTaskbar": false,
+        "alwaysOnTop": false
       }
     ]
   },
