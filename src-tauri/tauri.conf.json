@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "长期目标",
+  "productName": "longterm-goals",
   "version": "1.0.0",
   "identifier": "com.longterm.goals",
   "build": {
